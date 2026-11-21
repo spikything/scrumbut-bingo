@@ -152,6 +152,18 @@
     width: 38px; height: 38px; padding: 0; border-radius: 50%;
     font-size: 1.05rem; font-weight: 900; box-shadow: 0 2px 8px rgba(var(--shadow),.12);
   }
+  .top-fade {
+    position: fixed; top: 0; left: 0; right: 0; height: 72px; z-index: 9;
+    pointer-events: none; opacity: 0; transition: opacity .2s ease;
+    background: linear-gradient(to bottom, var(--paper) 0%, var(--paper) 45%, transparent 100%);
+  }
+  .top-fade.on { opacity: 1; }
+  .bottom-fade {
+    position: fixed; bottom: 0; left: 0; right: 0; height: 56px; z-index: 9;
+    pointer-events: none; opacity: 0; transition: opacity .2s ease;
+    background: linear-gradient(to top, var(--paper) 0%, transparent 100%);
+  }
+  .bottom-fade.on { opacity: 1; }
   .theme-toggle {
     position: fixed; top: 12px; left: 12px; z-index: 10;
     display: flex; align-items: center; justify-content: space-between;
@@ -197,7 +209,7 @@
   @media print {
     body { background: white; }
     .wrap { width: 100%; padding: 0; }
-    .toolbar, .help-btn, .theme-toggle { display: none !important; }
+    .toolbar, .help-btn, .theme-toggle, .top-fade, .bottom-fade { display: none !important; }
     .grid { grid-template-columns: repeat(5, 1fr); gap: 6px; }
     .tile { min-height: 130px; break-inside: avoid; box-shadow: none; }
   }
@@ -211,6 +223,8 @@
     <p class="subtitle">We do Scrum, but...</p>
   </header>
 
+  <div class="top-fade" id="top-fade" aria-hidden="true"></div>
+  <div class="bottom-fade" id="bottom-fade" aria-hidden="true"></div>
   <button type="button" class="theme-toggle" id="theme" role="switch" aria-checked="false" aria-label="Dark mode"><span class="knob" aria-hidden="true"></span><span class="sun" aria-hidden="true">☀️</span><span class="moon" aria-hidden="true">🌙</span></button>
   <button type="button" class="help-btn" id="help" aria-label="How to play" aria-haspopup="dialog">?</button>
   <dialog class="help-dialog" id="help-dialog" aria-labelledby="help-title">
@@ -382,6 +396,18 @@
   });
   darkQuery.addEventListener("change", syncTheme);
   syncTheme();
+
+  const topFade = document.getElementById("top-fade");
+  const bottomFade = document.getElementById("bottom-fade");
+  function syncFade() {
+    const y = window.scrollY;
+    const remaining = document.documentElement.scrollHeight - (y + window.innerHeight);
+    topFade.classList.toggle("on", y > 8);
+    bottomFade.classList.toggle("on", remaining > 24);
+  }
+  window.addEventListener("scroll", syncFade, { passive: true });
+  window.addEventListener("resize", syncFade);
+  syncFade();
 
   document.addEventListener("visibilitychange", () => { if (!document.hidden) render(); });
 
