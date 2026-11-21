@@ -80,7 +80,23 @@
   .checked .tick { border-color: var(--green); background: var(--green); color: white; }
   .copy { font-size: .88rem; line-height: 1.38; font-weight: 680; padding-right: 3px; }
   .copy em { color: var(--green-dark); font-style: normal; }
-  footer { text-align: center; margin-top: 22px; color: var(--muted); font-size: .78rem; }
+  .howto { margin: 10px 0 0; color: var(--muted); font-size: .85rem; }
+  .help-btn {
+    display: none; position: fixed; top: 12px; right: 12px; z-index: 10;
+    width: 38px; height: 38px; padding: 0; border-radius: 50%;
+    font-size: 1.05rem; font-weight: 900; box-shadow: 0 2px 8px rgba(22,44,31,.12);
+  }
+  .help-dialog {
+    width: min(100% - 32px, 360px); padding: 0;
+    border: 1px solid var(--line); border-radius: 16px;
+    background: var(--card); color: var(--ink); text-align: center;
+    box-shadow: 0 18px 48px rgba(22,44,31,.22);
+  }
+  .help-body { padding: 22px 20px 18px; }
+  .help-dialog::backdrop { background: rgba(23,37,31,.45); }
+  .help-dialog h2 { margin: 0 0 8px; font-size: 1.15rem; letter-spacing: -.02em; }
+  .help-dialog p { margin: 0 0 16px; color: var(--muted); font-size: .92rem; line-height: 1.45; }
+  .help-dialog button { background: var(--green); border-color: var(--green); color: white; padding: 10px 22px; }
   @media (max-width: 900px) {
     .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .tile { min-height: 150px; }
@@ -92,6 +108,8 @@
     .tile { min-height: 142px; padding: 12px; border-radius: 12px; }
     .copy { font-size: .82rem; }
     .toolbar { align-items: flex-start; }
+    .howto { display: none; }
+    .help-btn { display: grid; place-items: center; }
   }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { transition-duration: .01ms !important; scroll-behavior: auto !important; }
@@ -99,7 +117,7 @@
   @media print {
     body { background: white; }
     .wrap { width: 100%; padding: 0; }
-    .toolbar, footer { display: none; }
+    .toolbar, .howto, .help-btn { display: none !important; }
     .grid { grid-template-columns: repeat(5, 1fr); gap: 6px; }
     .tile { min-height: 130px; break-inside: avoid; box-shadow: none; }
   }
@@ -111,10 +129,20 @@
     <div class="eyebrow"><span aria-hidden="true">◈</span> Agile in name only</div>
     <h1>SCRUMBUT BINGO</h1>
     <p class="subtitle">We do Scrum, but...</p>
+    <p class="howto">Tap or click a square to mark it. Your board is saved on this device.</p>
   </header>
 
+  <button type="button" class="help-btn" id="help" aria-label="How to play" aria-haspopup="dialog">?</button>
+  <dialog class="help-dialog" id="help-dialog" aria-labelledby="help-title">
+    <div class="help-body">
+      <h2 id="help-title">How to play</h2>
+      <p>Tap or click a square to mark it. Your board is saved on this device.</p>
+      <form method="dialog"><button type="submit" autofocus>Got it</button></form>
+    </div>
+  </dialog>
+
   <section class="toolbar" aria-label="Bingo progress and controls">
-    <div class="progress" aria-live="polite"><strong id="count">0</strong> of 1 squares checked</div>
+    <div class="progress" aria-live="polite"><strong id="count">0</strong> of 40 squares checked</div>
     <div class="actions">
       <button type="button" id="print">Print board</button>
       <button type="button" id="reset">Reset board</button>
@@ -123,8 +151,53 @@
 
   <section class="grid" id="board" aria-label="Scrumbut bingo squares">
     <button class="tile" type="button" data-id="0" aria-pressed="false"><span class="topline"><span class="icon">🗂️</span><span class="number">01</span></span><span class="copy">The project manager decides what's going into the sprint.</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="1" aria-pressed="false"><span class="topline"><span class="icon">🎯</span><span class="number">02</span></span><span class="copy">We don't estimate anything.</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="2" aria-pressed="false"><span class="topline"><span class="icon">🚨</span><span class="number">03</span></span><span class="copy">Everything is a priority.</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="3" aria-pressed="false"><span class="topline"><span class="icon">➕</span><span class="number">04</span></span><span class="copy">We add work to the sprint whenever someone asks.</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="4" aria-pressed="false"><span class="topline"><span class="icon">📅</span><span class="number">05</span></span><span class="copy">Sprint deadlines are non-negotiable.</span><span class="tick" aria-hidden="true">✓</span></button>
+
+    <button class="tile" type="button" data-id="5" aria-pressed="false"><span class="topline"><span class="icon">🙊</span><span class="number">06</span></span><span class="copy">Developers don't get a say in sprint commitments.</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="6" aria-pressed="false"><span class="topline"><span class="icon">⏱️</span><span class="number">07</span></span><span class="copy">The stand-up takes 45 minutes.</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="7" aria-pressed="false"><span class="topline"><span class="icon">📊</span><span class="number">08</span></span><span class="copy">It's really a status report to management.</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="8" aria-pressed="false"><span class="topline"><span class="icon">🗣️</span><span class="number">09</span></span><span class="copy">Everyone has to explain what they did yesterday in detail.</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="9" aria-pressed="false"><span class="topline"><span class="icon">🔍</span><span class="number">10</span></span><span class="copy">The Scrum Master uses it to chase people for updates.</span><span class="tick" aria-hidden="true">✓</span></button>
+
+    <button class="tile" type="button" data-id="10" aria-pressed="false"><span class="topline"><span class="icon">🗓️</span><span class="number">11</span></span><span class="copy">We only have stand-ups when the manager is available.</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="11" aria-pressed="false"><span class="topline"><span class="icon">🤐</span><span class="number">12</span></span><span class="copy">Nobody can mention blockers without proposing a solution.</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="12" aria-pressed="false"><span class="topline"><span class="icon">🚢</span><span class="number">13</span></span><span class="copy">We don't release anything until the end of the project.</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="13" aria-pressed="false"><span class="topline"><span class="icon">🧪</span><span class="number">14</span></span><span class="copy">Testing happens after the sprint.</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="14" aria-pressed="false"><span class="topline"><span class="icon">🔁</span><span class="number">15</span></span><span class="copy">Unfinished stories automatically roll over.</span><span class="tick" aria-hidden="true">✓</span></button>
+
+    <button class="tile" type="button" data-id="15" aria-pressed="false"><span class="topline"><span class="icon">🧭</span><span class="number">16</span></span><span class="copy">The sprint goal changes every other day.</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="16" aria-pressed="false"><span class="topline"><span class="icon">🧵</span><span class="number">17</span></span><span class="copy">Developers work on several sprints simultaneously.</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="17" aria-pressed="false"><span class="topline"><span class="icon">📦</span><span class="number">18</span></span><span class="copy">We're committed to a fixed scope regardless of what we learn.</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="18" aria-pressed="false"><span class="topline"><span class="icon">🎭</span><span class="number">19</span></span><span class="copy">The Scrum Master is also the project manager.</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="19" aria-pressed="false"><span class="topline"><span class="icon">📵</span><span class="number">20</span></span><span class="copy">The Product Owner is only available once a fortnight.</span><span class="tick" aria-hidden="true">✓</span></button>
+
+    <button class="tile" type="button" data-id="20" aria-pressed="false"><span class="topline"><span class="icon">🚧</span><span class="number">21</span></span><span class="copy">Developers can't speak directly to stakeholders.</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="21" aria-pressed="false"><span class="topline"><span class="icon">👑</span><span class="number">22</span></span><span class="copy">The tech lead makes all the technical decisions.</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="22" aria-pressed="false"><span class="topline"><span class="icon">📏</span><span class="number">23</span></span><span class="copy">The business decides how long development tasks should take.</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="23" aria-pressed="false"><span class="topline"><span class="icon">🧹</span><span class="number">24</span></span><span class="copy">Retrospectives are cancelled when we're busy.</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="24" aria-pressed="false"><span class="topline"><span class="icon">📝</span><span class="number">25</span></span><span class="copy">Nobody ever follows up on retrospective actions.</span><span class="tick" aria-hidden="true">✓</span></button>
+
+    <button class="tile" type="button" data-id="25" aria-pressed="false"><span class="topline"><span class="icon">📖</span><span class="number">26</span></span><span class="copy">Refinement is just someone reading tickets aloud.</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="26" aria-pressed="false"><span class="topline"><span class="icon">🪞</span><span class="number">27</span></span><span class="copy">Sprint reviews are internal status meetings.</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="27" aria-pressed="false"><span class="topline"><span class="icon">📆</span><span class="number">28</span></span><span class="copy">We have a daily meeting for every team and project.</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="28" aria-pressed="false"><span class="topline"><span class="icon">🫠</span><span class="number">29</span></span><span class="copy">We don't have time to do Scrum properly.</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="29" aria-pressed="false"><span class="topline"><span class="icon">🧱</span><span class="number">30</span></span><span class="copy">We've always done it this way.</span><span class="tick" aria-hidden="true">✓</span></button>
+
+    <button class="tile" type="button" data-id="30" aria-pressed="false"><span class="topline"><span class="icon">🌀</span><span class="number">31</span></span><span class="copy">“We're Agile, not Scrum.”</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="31" aria-pressed="false"><span class="topline"><span class="icon">🤸</span><span class="number">32</span></span><span class="copy">“We need to be more agile about following the process.”</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="32" aria-pressed="false"><span class="topline"><span class="icon">🛋️</span><span class="number">33</span></span><span class="copy">“Let's take that offline.”</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="33" aria-pressed="false"><span class="topline"><span class="icon">🤏</span><span class="number">34</span></span><span class="copy">“Can we just squeeze this into the sprint?”</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="34" aria-pressed="false"><span class="topline"><span class="icon">🐜</span><span class="number">35</span></span><span class="copy">“It's only a small change.”</span><span class="tick" aria-hidden="true">✓</span></button>
+
+    <button class="tile" type="button" data-id="35" aria-pressed="false"><span class="topline"><span class="icon">🧾</span><span class="number">36</span></span><span class="copy">“We'll fix the technical debt next sprint.”</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="36" aria-pressed="false"><span class="topline"><span class="icon">📈</span><span class="number">37</span></span><span class="copy">“We need to improve velocity.”</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="37" aria-pressed="false"><span class="topline"><span class="icon">🗓️</span><span class="number">38</span></span><span class="copy">“Let's have a meeting about why we have too many meetings.”</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="38" aria-pressed="false"><span class="topline"><span class="icon">⚖️</span><span class="number">39</span></span><span class="copy">“The sprint is committed, but nothing is guaranteed.”</span><span class="tick" aria-hidden="true">✓</span></button>
+    <button class="tile" type="button" data-id="39" aria-pressed="false"><span class="topline"><span class="icon">📚</span><span class="number">40</span></span><span class="copy">“We don't do documentation because we're Agile.”</span><span class="tick" aria-hidden="true">✓</span></button>
   </section>
-  <footer>Tap or click a square to mark it. Your board is saved on this device.</footer>
 </main>
 <script>
 (() => {
@@ -176,6 +249,23 @@
   });
 
   document.getElementById("print").addEventListener("click", () => window.print());
+
+  const HELP_KEY = "scrumbut-bingo-help-seen-v1";
+  const helpDialog = document.getElementById("help-dialog");
+  function openHelp() {
+    if (typeof helpDialog.showModal === "function") helpDialog.showModal();
+    else window.alert(helpDialog.querySelector("p").textContent);
+  }
+  document.getElementById("help").addEventListener("click", openHelp);
+  helpDialog.addEventListener("click", e => { if (e.target === helpDialog) helpDialog.close(); });
+  if (window.matchMedia("(max-width: 650px)").matches) {
+    let seen = false;
+    try { seen = localStorage.getItem(HELP_KEY) === "1"; } catch (_) {}
+    if (!seen) {
+      openHelp();
+      try { localStorage.setItem(HELP_KEY, "1"); } catch (_) {}
+    }
+  }
   render();
 })();
 </script>
