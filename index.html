@@ -142,7 +142,7 @@
   </dialog>
 
   <section class="toolbar" aria-label="Bingo progress and controls">
-    <div class="progress" aria-live="polite"><strong id="count">0</strong> of 40 squares checked</div>
+    <div class="progress" aria-live="polite"><strong id="count">0</strong> of 40 squares checked <span aria-hidden="true">·</span> Day <strong id="days">1</strong></div>
     <div class="actions">
       <button type="button" id="print">Print board</button>
       <button type="button" id="reset">Reset board</button>
@@ -205,6 +205,35 @@
   const KEY = "scrumbut-bingo-checked-v1";
   const tiles = Array.from(document.querySelectorAll(".tile"));
   const count = document.getElementById("count");
+  const START_KEY = "scrumbut-bingo-start-v1";
+  const days = document.getElementById("days");
+
+  function today() {
+    const d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+
+  function dayNumber(iso) {
+    const [y, m, d] = iso.split("-").map(Number);
+    const now = new Date();
+    const diff = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) - Date.UTC(y, m - 1, d);
+    return Math.max(1, Math.floor(diff / 86400000) + 1);
+  }
+
+  function readStart() {
+    try {
+      const value = localStorage.getItem(START_KEY);
+      if (value && /^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+    } catch (_) {}
+    return null;
+  }
+
+  function saveStart(value) {
+    try { localStorage.setItem(START_KEY, value); } catch (_) {}
+  }
+
+  let start = readStart();
+  if (!start) { start = today(); saveStart(start); }
 
   function readSaved() {
     try {
@@ -224,6 +253,7 @@
       tile.setAttribute("aria-pressed", String(active));
     });
     count.textContent = String(checked.size);
+    days.textContent = String(dayNumber(start));
   }
 
   function save() {
@@ -241,14 +271,17 @@
   });
 
   document.getElementById("reset").addEventListener("click", () => {
-    if (!checked.size || window.confirm("Clear all checked squares?")) {
+    if (!checked.size || window.confirm("Clear all checked squares and restart the day count?")) {
       checked.clear();
       save();
+      start = today();
+      saveStart(start);
       render();
     }
   });
 
   document.getElementById("print").addEventListener("click", () => window.print());
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) render(); });
 
   const HELP_KEY = "scrumbut-bingo-help-seen-v1";
   const helpDialog = document.getElementById("help-dialog");
