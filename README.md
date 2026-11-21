@@ -45,6 +45,7 @@ index.html             the app
 manifest.webmanifest   PWA manifest
 sw.js                  service worker (offline cache)
 icons/                 app icons and favicon
+og.jpg                 1200×630 social share image
 ```
 
 When you change any file, bump `VERSION` in `sw.js` so installed copies pick up the update.
