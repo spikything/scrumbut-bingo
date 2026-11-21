@@ -32,6 +32,19 @@ npx serve .
 
 The page loads the Plus Jakarta Sans font from Google Fonts and falls back to system fonts when offline.
 
+## Install as an app
+
+Scrumbut Bingo is a Progressive Web App. Open it in Chrome, Edge or Safari and choose **Install** (desktop) or **Add to Home Screen** (mobile). Once installed it works offline.
+
 ## Hosting
 
-Upload `index.html` to any static host. It works from any path, e.g. `/scrumbut-bingo/`.
+Upload the whole folder to any static host served over HTTPS. All paths are relative, so it works from any path, e.g. `/scrumbut-bingo/`.
+
+```
+index.html             the app
+manifest.webmanifest   PWA manifest
+sw.js                  service worker (offline cache)
+icons/                 app icons and favicon
+```
+
+When you change any file, bump `VERSION` in `sw.js` so installed copies pick up the update.
