@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#17251f">
+<title>Scrumbut Bingo</title>
+<style>
+  :root {
+    color-scheme: light;
+    --ink: #17251f;
+    --muted: #64736b;
+    --paper: #f4f6f1;
+    --card: #ffffff;
+    --line: #dce4dc;
+    --green: #246b4b;
+    --green-dark: #174b34;
+    --mint: #d9f2e2;
+    --orange: #f3b65d;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 10% 0%, rgba(217,242,226,.8), transparent 32rem),
+      var(--paper);
+    color: var(--ink);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  .wrap { width: min(1320px, 100% - 32px); margin: 0 auto; padding: 38px 0 48px; }
+  header { text-align: center; margin-bottom: 28px; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 6px 11px; border: 1px solid var(--line); border-radius: 999px;
+    color: var(--green); background: rgba(255,255,255,.72);
+    font-size: .72rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+  }
+  h1 { margin: 14px 0 3px; font-size: clamp(2.25rem, 6vw, 4.5rem); line-height: .98; letter-spacing: -.065em; font-weight: 950; }
+  .subtitle { margin: 12px 0 0; color: var(--muted); font-size: clamp(1.05rem, 2.5vw, 1.35rem); font-weight: 650; }
+  .toolbar {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    margin: 0 0 16px; flex-wrap: wrap;
+  }
+  .progress { color: var(--muted); font-size: .9rem; font-weight: 650; }
+  .progress strong { color: var(--green-dark); font-variant-numeric: tabular-nums; }
+  .actions { display: flex; gap: 8px; }
+  button {
+    appearance: none; border: 1px solid var(--line); border-radius: 10px;
+    background: white; color: var(--ink); padding: 9px 13px;
+    font: inherit; font-size: .82rem; font-weight: 750; cursor: pointer;
+  }
+  button:hover { border-color: var(--green); color: var(--green-dark); }
+  button:focus-visible, .tile:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
+  .grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 11px; }
+  .tile {
+    position: relative; display: flex; flex-direction: column; align-items: flex-start;
+    min-height: 156px; padding: 15px 15px 14px; border: 1px solid var(--line);
+    border-radius: 15px; background: var(--card); text-align: left; cursor: pointer;
+    box-shadow: 0 2px 5px rgba(22,44,31,.035);
+    transition: transform .14s ease, border-color .14s ease, background .14s ease, box-shadow .14s ease;
+  }
+  .tile:hover { transform: translateY(-2px); border-color: #a9c8b3; box-shadow: 0 7px 18px rgba(22,44,31,.08); }
+  .tile.checked {
+    background: var(--mint); border-color: #75b48d;
+    box-shadow: inset 0 0 0 1px rgba(36,107,75,.12);
+  }
+  .topline { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 11px; }
+  .icon {
+    display: grid; place-items: center; width: 34px; height: 34px; flex: 0 0 34px;
+    border-radius: 10px; background: #edf3ed; font-size: 1.12rem;
+  }
+  .checked .icon { background: #c1e7ce; }
+  .number { color: #91a097; font-size: .68rem; font-weight: 850; letter-spacing: .08em; }
+  .tick {
+    position: absolute; top: 12px; right: 12px; width: 23px; height: 23px;
+    display: grid; place-items: center; border: 1.5px solid #cbd6cd; border-radius: 50%;
+    color: transparent; font-size: .85rem; font-weight: 900; background: white;
+  }
+  .checked .tick { border-color: var(--green); background: var(--green); color: white; }
+  .copy { font-size: .88rem; line-height: 1.38; font-weight: 680; padding-right: 3px; }
+  .copy em { color: var(--green-dark); font-style: normal; }
+  footer { text-align: center; margin-top: 22px; color: var(--muted); font-size: .78rem; }
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .tile { min-height: 150px; }
+  }
+  @media (max-width: 650px) {
+    .wrap { width: min(100% - 22px, 520px); padding-top: 27px; }
+    header { margin-bottom: 22px; }
+    .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .tile { min-height: 142px; padding: 12px; border-radius: 12px; }
+    .copy { font-size: .82rem; }
+    .toolbar { align-items: flex-start; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  }
+  @media print {
+    body { background: white; }
+    .wrap { width: 100%; padding: 0; }
+    .toolbar, footer { display: none; }
+    .grid { grid-template-columns: repeat(5, 1fr); gap: 6px; }
+    .tile { min-height: 130px; break-inside: avoid; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <div class="eyebrow"><span aria-hidden="true">◈</span> Agile in name only</div>
+    <h1>SCRUMBUT BINGO</h1>
+    <p class="subtitle">We do Scrum, but...</p>
+  </header>
+
+  <section class="toolbar" aria-label="Bingo progress and controls">
+    <div class="progress" aria-live="polite"><strong id="count">0</strong> of 1 squares checked</div>
+    <div class="actions">
+      <button type="button" id="print">Print board</button>
+      <button type="button" id="reset">Reset board</button>
+    </div>
+  </section>
+
+  <section class="grid" id="board" aria-label="Scrumbut bingo squares">
+    <button class="tile" type="button" data-id="0" aria-pressed="false"><span class="topline"><span class="icon">🗂️</span><span class="number">01</span></span><span class="copy">The project manager decides what's going into the sprint.</span><span class="tick" aria-hidden="true">✓</span></button>
+  </section>
+  <footer>Tap or click a square to mark it. Your board is saved on this device.</footer>
+</main>
+<script>
+(() => {
+  "use strict";
+  const KEY = "scrumbut-bingo-checked-v1";
+  const tiles = Array.from(document.querySelectorAll(".tile"));
+  const count = document.getElementById("count");
+
+  function readSaved() {
+    try {
+      const value = JSON.parse(localStorage.getItem(KEY) || "[]");
+      return new Set(Array.isArray(value) ? value.filter(n => Number.isInteger(n) && n >= 0 && n < tiles.length) : []);
+    } catch (_) {
+      return new Set();
+    }
+  }
+
+  let checked = readSaved();
+
+  function render() {
+    tiles.forEach((tile, index) => {
+      const active = checked.has(index);
+      tile.classList.toggle("checked", active);
+      tile.setAttribute("aria-pressed", String(active));
+    });
+    count.textContent = String(checked.size);
+  }
+
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(Array.from(checked))); }
+    catch (_) { /* The board remains usable if storage is unavailable. */ }
+  }
+
+  tiles.forEach((tile, index) => {
+    tile.addEventListener("click", () => {
+      if (checked.has(index)) checked.delete(index);
+      else checked.add(index);
+      save();
+      render();
+    });
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    if (!checked.size || window.confirm("Clear all checked squares?")) {
+      checked.clear();
+      save();
+      render();
+    }
+  });
+
+  document.getElementById("print").addEventListener("click", () => window.print());
+  render();
+})();
+</script>
+</body>
+</html>
