@@ -47,6 +47,8 @@
     --icon-checked: #c1e7ce;
     --tick-line: #cbd6cd;
     --shadow: 22,44,31;
+    --backdrop: rgba(23,37,31,.45);
+    --backdrop-strong: rgba(8,14,11,.72);
   }
   @media screen and (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
@@ -69,6 +71,8 @@
       --icon-checked: #2a5440;
       --tick-line: #3a4c42;
       --shadow: 0,0,0;
+      --backdrop: rgba(0,0,0,.78);
+      --backdrop-strong: rgba(0,0,0,.88);
     }
   }
   @media screen {
@@ -92,6 +96,8 @@
       --icon-checked: #2a5440;
       --tick-line: #3a4c42;
       --shadow: 0,0,0;
+      --backdrop: rgba(0,0,0,.78);
+      --backdrop-strong: rgba(0,0,0,.88);
     }
   }
   * { box-sizing: border-box; }
@@ -195,12 +201,12 @@
     box-shadow: 0 18px 48px rgba(var(--shadow),.22);
   }
   .help-body { padding: 22px 20px 18px; }
-  .help-dialog::backdrop { background: rgba(23,37,31,.45); }
+  .help-dialog::backdrop { background: var(--backdrop, rgba(23,37,31,.45)); }
   .help-dialog h2 { margin: 0 0 8px; font-size: 1.15rem; letter-spacing: -.02em; }
   .help-dialog p { margin: 0 0 16px; color: var(--muted); font-size: .92rem; line-height: 1.45; }
   .help-dialog button { background: var(--green); border-color: var(--green); color: white; padding: 10px 22px; }
   .win-dialog { overflow: visible; }
-  .win-dialog::backdrop { background: rgba(8,14,11,.72); }
+  .win-dialog::backdrop { background: var(--backdrop-strong, rgba(8,14,11,.72)); }
   .win-dialog .help-body { position: relative; z-index: 1; padding: 26px 22px 20px; }
   .win-burst { font-size: 2.4rem; line-height: 1; margin-bottom: 8px; }
   .win-dialog h2 { font-size: clamp(1.6rem, 6vw, 2rem); font-weight: 800; letter-spacing: -.04em; color: var(--green-dark); }
