@@ -181,12 +181,15 @@
     .tile { min-height: 150px; }
   }
   @media (max-width: 650px) {
-    .wrap { width: min(100% - 22px, 520px); padding-top: 60px; }
+    .wrap { width: min(100% - 22px, 520px); padding-top: 17px; }
     header { margin-bottom: 22px; }
     .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
     .tile { min-height: 142px; padding: 12px; border-radius: 12px; }
     .copy { font-size: .82rem; }
-    .toolbar { align-items: flex-start; }
+    .toolbar { flex-wrap: nowrap; }
+  }
+  @media (max-width: 370px) {
+    .eyebrow { padding: 6px 9px; font-size: .64rem; letter-spacing: .06em; }
   }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { transition-duration: .01ms !important; scroll-behavior: auto !important; }
@@ -219,10 +222,10 @@
   </dialog>
 
   <section class="toolbar" aria-label="Bingo progress and controls">
-    <div class="progress" aria-live="polite"><strong id="count">0</strong> of 40 squares checked <span aria-hidden="true">·</span> Day <strong id="days">1</strong></div>
+    <div class="progress" aria-live="polite">Day <strong id="days">1</strong> <span aria-hidden="true">·</span> <strong id="count">0</strong> of 40</div>
     <div class="actions">
-      <button type="button" id="print">Print board</button>
-      <button type="button" id="reset">Reset board</button>
+      <button type="button" id="print">Print</button>
+      <button type="button" id="reset">Reset</button>
     </div>
   </section>
 
